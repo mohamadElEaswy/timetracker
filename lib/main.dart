@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:timetracker/services/auth.dart';
 import 'package:timetracker/ui/landing_page.dart';
 
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,backgroundColor: Colors.grey[600],
       ),
-      home: const LandingPage(),
+      home: LandingPage(auth: Auth(),),
     );
   }
 }
