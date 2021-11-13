@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "525625350725",
+    "project_id": "time-tracker-easwy",
+    "storage_bucket": "time-tracker-easwy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525625350725:android:8299ca0b55cedac20de12c",
+        "android_client_info": {
+          "package_name": "com.example.timetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "525625350725-3128dlk3r6s03splc05stu197oflget4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.timetracker",
+            "certificate_hash": "0a73c8b2e12324c9c51d2bb88f8cfaca1a0cf729"
+          }
+        },
+        {
+          "client_id": "525625350725-o7olpivj5svsk49g576dsptpss1106lr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJNmmG168aY42Fzj_9pTqjIsMTfT41hlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "525625350725-o7olpivj5svsk49g576dsptpss1106lr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
