@@ -12,6 +12,14 @@ class SignInScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _signInWithGoogle() async {
+    try {
+      await auth.signInWithGoogle();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,22 +33,22 @@ class SignInScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             DefaultButton(
-              onPressed: () {},
+              onPressed: _signInWithGoogle,
               text: 'Sing In with Google',
               color: Colors.white,
               textColor: Colors.black,
-            ),
+            ),const SizedBox(height: 20.0,),
             DefaultButton(
               onPressed: () {},
               text: 'Sing In with FaceBook',
               color: Colors.blue,
-            ),
+            ),const SizedBox(height: 20.0,),
             DefaultButton(
               onPressed: () {},
               text: 'Sing In with email',
               color: Colors.green,
-            ),
-            const Text('OR'),
+            ),const SizedBox(height: 20.0,),
+            const Text('OR'),const SizedBox(height: 20.0,),
             DefaultButton(
               onPressed: _signInAnonymously,
               text: 'Sing In Anonymously',
@@ -70,6 +78,7 @@ class DefaultButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 50.0,
       width: double.infinity,
       child: ElevatedButton(
         onPressed: onPressed,
