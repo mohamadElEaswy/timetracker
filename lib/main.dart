@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:timetracker/services/auth.dart';
 import 'package:timetracker/ui/landing_page.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -19,9 +18,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.indigo,backgroundColor: Colors.grey[600],
+        primarySwatch: Colors.indigo,
+        backgroundColor: Colors.grey[600],
       ),
-      home: LandingPage(auth: Auth(),),
+      home: LandingPage(auth: Auth()),
     );
   }
 }
@@ -71,6 +71,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
 
 // https://courses.codewithandrea.com/courses/1330803/lectures/30572129

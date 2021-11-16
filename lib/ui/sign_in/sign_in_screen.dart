@@ -19,6 +19,13 @@ class SignInScreen extends StatelessWidget {
       print(e.toString());
     }
   }
+  // Future<void> _signInWithFacebook() async {
+  //   try {
+  //     await auth.signInWithFacebook();
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +45,11 @@ class SignInScreen extends StatelessWidget {
               color: Colors.white,
               textColor: Colors.black,
             ),const SizedBox(height: 20.0,),
-            DefaultButton(
-              onPressed: () {},
-              text: 'Sing In with FaceBook',
-              color: Colors.blue,
-            ),const SizedBox(height: 20.0,),
+            // DefaultButton(
+            //   onPressed: _signInWithFacebook,
+            //   text: 'Sing In with FaceBook',
+            //   color: Colors.blue,
+            // ),const SizedBox(height: 20.0,),
             DefaultButton(
               onPressed: () {},
               text: 'Sing In with email',
