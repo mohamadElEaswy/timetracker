@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timetracker/services/auth.dart';
+import 'package:timetracker/ui/sign_in_with_email/sign_in_with_email_screen.dart';
+import 'package:timetracker/ui/widgets/global_button.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({Key? key, required this.auth}) : super(key: key);
@@ -19,6 +21,7 @@ class SignInScreen extends StatelessWidget {
       print(e.toString());
     }
   }
+
   // Future<void> _signInWithFacebook() async {
   //   try {
   //     await auth.signInWithFacebook();
@@ -44,18 +47,29 @@ class SignInScreen extends StatelessWidget {
               text: 'Sing In with Google',
               color: Colors.white,
               textColor: Colors.black,
-            ),const SizedBox(height: 20.0,),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
             // DefaultButton(
             //   onPressed: _signInWithFacebook,
             //   text: 'Sing In with FaceBook',
             //   color: Colors.blue,
             // ),const SizedBox(height: 20.0,),
             DefaultButton(
-              onPressed: () {},
+              onPressed: () {
+                _signInWithEmail(context);
+              },
               text: 'Sing In with email',
               color: Colors.green,
-            ),const SizedBox(height: 20.0,),
-            const Text('OR'),const SizedBox(height: 20.0,),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            const Text('OR'),
+            const SizedBox(
+              height: 20.0,
+            ),
             DefaultButton(
               onPressed: _signInAnonymously,
               text: 'Sing In Anonymously',
@@ -66,38 +80,12 @@ class SignInScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-class DefaultButton extends StatelessWidget {
-  const DefaultButton(
-      {Key? key,
-      required this.text,
-      required this.onPressed,
-      required this.color,
-      this.textColor = Colors.white})
-      : super(key: key);
-
-  final String text;
-  final VoidCallback onPressed;
-  final Color color;
-  final Color textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50.0,
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(color: textColor),
-        ),
-        style: ButtonStyle(
-          elevation: MaterialStateProperty.all(0.0),
-          backgroundColor: MaterialStateProperty.all<Color>(color),
-        ),
-      ),
-    );
+  void _signInWithEmail(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => SignInWithEmail(auth: auth,)));
   }
 }
+
+
+
+
