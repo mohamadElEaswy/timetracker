@@ -3,8 +3,8 @@ import 'package:timetracker/services/auth.dart';
 import 'package:timetracker/ui/sign_in/validators.dart';
 import 'package:timetracker/ui/widgets/global_button.dart';
 
-class SignInWithEmail extends StatefulWidget with EmailAndPasswordValidation{
-   SignInWithEmail({Key? key, required this.auth}) : super(key: key);
+class SignInWithEmail extends StatefulWidget with EmailAndPasswordValidation {
+  SignInWithEmail({Key? key, required this.auth}) : super(key: key);
   final AuthBase auth;
   @override
   State<SignInWithEmail> createState() => _SignInWithEmailState();
@@ -17,15 +17,24 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+
   void _emailEditingComplete() {
-    FocusScope.of(context).requestFocus(_passwordFocusNode);
+    final newFocus = widget.emailValidator.isValid(_email) ? _passwordFocusNode: _emailFocusNode ;
+    FocusScope.of(context).requestFocus(newFocus);
   }
 
   String get _email => _emailController.text;
   String get _password => _passwordController.text;
 
   EmailSignInFormType _formType = EmailSignInFormType.signIn;
+
+  bool _submitted = false;
+  bool _isLoading = false;
   void _submit() async {
+    setState(() {
+      _submitted = true;
+      _isLoading = true;
+    });
     try {
       if (_formType == EmailSignInFormType.signIn) {
         await widget.auth.signInWithEmailAndPassword(_email, _password);
@@ -35,6 +44,10 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
       Navigator.of(context).pop();
     } catch (e) {
       print(e.toString());
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -43,12 +56,15 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
       _formType = _formType == EmailSignInFormType.signIn
           ? EmailSignInFormType.register
           : EmailSignInFormType.signIn;
+      _submitted = false;
     });
     _emailController.clear();
     _passwordController.clear();
   }
 
-  void _updateState() {setState((){});}
+  void _updateState() {
+    setState(() {});
+  }
 
   List<Widget> _buildChildren() {
     final String primaryText = _formType == EmailSignInFormType.signIn
@@ -57,12 +73,13 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
     final String secondaryText = _formType == EmailSignInFormType.signIn
         ? 'Need an account? Register'
         : 'Have an account? Sign in';
-    bool submitEnabled = widget.emailValidator.isValid(_email) && widget.emailValidator.isValid(_password);
-        // _email.isNotEmpty && _password.isNotEmpty;
-    bool emailValid = widget.emailValidator.isValid(_email);
-    bool passwordValid = widget.passwordValidator.isValid(_password);
+    bool submitEnabled = widget.emailValidator.isValid(_email) &&
+        widget.emailValidator.isValid(_password) && !_isLoading;
+    // _email.isNotEmpty && _password.isNotEmpty;
+    bool emailValid = _submitted && !widget.emailValidator.isValid(_email);
+    bool passwordValid =
+        _submitted && !widget.passwordValidator.isValid(_password);
     return [
-
       TextField(
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
@@ -71,7 +88,8 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
         decoration: InputDecoration(
           hintText: 'test@test.com',
           label: const Text('Email'),
-          errorText: emailValid ? null :  'email is required ',
+          errorText: emailValid ? widget.invalidEmailErrorText : null,
+          enabled: _isLoading == false,
         ),
         focusNode: _emailFocusNode,
         onEditingComplete: _emailEditingComplete,
@@ -83,7 +101,8 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           label: const Text('Password'),
-          errorText: passwordValid ? null :  'password is required ',
+          errorText: passwordValid ? widget.invalidPasswordErrorText : null,
+          enabled: _isLoading == false,
         ),
         obscureText: true,
         autocorrect: false,
@@ -99,7 +118,9 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
       ),
       // ElevatedButton(onPressed: () {}, child: const Text('Sign in')),
       const SizedBox(height: 8),
-      TextButton(onPressed: _toggleFormType, child: Text(secondaryText)),
+      TextButton(
+          onPressed: !_isLoading ? _toggleFormType : null,
+          child: Text(secondaryText)),
     ];
   }
 
@@ -107,15 +128,17 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Sign in With Email')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: _buildChildren(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: _buildChildren(),
+              ),
             ),
           ),
         ),
