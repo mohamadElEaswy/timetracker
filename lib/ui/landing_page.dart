@@ -10,19 +10,6 @@ class LandingPage extends StatelessWidget {
   const LandingPage({Key? key}) : super(key: key);
 
   @override
-  // void initState() {
-  //   super.initState();
-  // widget.auth.authUserState().listen((user) {
-  //   print(user);
-  // });
-  //   _updateUser(FirebaseAuth.instance.currentUser);
-  // }
-
-  // void _updateUser(User? user) {
-  // setState(() {
-  // _user = user;
-  // });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +20,7 @@ class LandingPage extends StatelessWidget {
         final User? user = snapshot.data;
         if (snapshot.connectionState == ConnectionState.active) {
           if (user == null) {
-            return const SignInScreen();
+            return SignInScreen.create(context);
           } else {
             return const HomeScreen();
           }

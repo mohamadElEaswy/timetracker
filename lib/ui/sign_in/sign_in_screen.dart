@@ -2,20 +2,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timetracker/services/auth.dart';
-// import 'package:timetracker/services/auth_provider.dart';
-import 'package:timetracker/ui/sign_in_with_email/sign_in_with_email_screen.dart';
+import 'package:timetracker/ui/sign_in/sign_in_bloc.dart';
+import 'package:timetracker/ui/sign_in/sign_in_with_email/sign_in_with_email_screen.dart';
 import 'package:timetracker/ui/widgets/exceptions.dart';
 import 'package:timetracker/ui/widgets/global_button.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
-
-  @override
-  State<SignInScreen> createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> {
-  bool isLoading = false;
+class SignInScreen extends StatelessWidget {
+  const SignInScreen({Key? key, required this.bloc}) : super(key: key);
+  final SignInBloc bloc;
+  static Widget create(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+    return Provider<SignInBloc>(
+      create: (_) => SignInBloc(auth: auth),
+      dispose: (_, bloc) => bloc.dispose(),
+      child: Consumer<SignInBloc>(
+        builder: (_, bloc, __) => SignInScreen(bloc: bloc),
+      ),
+    );
+  }
 
   Future<void> _signInExceptions(BuildContext context, Exception exception) {
     if (exception is FirebaseAuthException &&
@@ -29,25 +33,17 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
-      setState(() => isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInAnonymously();
+      await bloc.signInAnonymously();
     } on Exception catch (e) {
       _signInExceptions(context, e);
-    } finally {
-      setState(() => isLoading = false);
     }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
-      setState(() => isLoading = true);
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signInWithGoogle();
+      await bloc.signInWithGoogle();
     } on Exception catch (e) {
       _signInExceptions(context, e);
-    } finally {
-      setState(() => isLoading = false);
     }
   }
 
@@ -57,63 +53,66 @@ class _SignInScreenState extends State<SignInScreen> {
       appBar: AppBar(
         title: const Text('Time Trucker'),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildHeader(),
-                const SizedBox(
-                  height: 20.0,
+      body: StreamBuilder<bool>(
+        stream: bloc.isLoadingStream,
+        initialData: false,
+        builder: (context, snapshot) {
+          bool isLoading = snapshot.data!;
+          return Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildHeader(isLoading),
+                    const SizedBox(height: 20.0),
+                    SizedBox(
+                      height: 50.0,
+                      child: DefaultButton(
+                        onPressed:
+                            isLoading ? null : () => _signInWithGoogle(context),
+                        text: 'Sign In with Google',
+                        color: Colors.white,
+                        textColor: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    // DefaultButton(
+                    //   onPressed: _signInWithFacebook,
+                    //   text: 'Sing In with FaceBook',
+                    //   color: Colors.blue,
+                    // ),const SizedBox(height: 20.0,),
+                    DefaultButton(
+                      onPressed:
+                          isLoading ? null : () => _signInWithEmail(context),
+                      text: 'Sign in with email',
+                      color: Colors.green,
+                    ),
+                    const SizedBox(height: 20.0),
+                    const Text('OR'),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    DefaultButton(
+                      onPressed:
+                          isLoading ? null : () => _signInAnonymously(context),
+                      text: 'Sign In Anonymously',
+                      color: Colors.amber,
+                    ),
+                  ],
                 ),
-                SizedBox( height: 50.0,
-                  child: DefaultButton(
-                    onPressed:
-                        isLoading ? null : () => _signInWithGoogle(context),
-                    text: 'Sign In with Google',
-                    color: Colors.white,
-                    textColor: Colors.black,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                // DefaultButton(
-                //   onPressed: _signInWithFacebook,
-                //   text: 'Sing In with FaceBook',
-                //   color: Colors.blue,
-                // ),const SizedBox(height: 20.0,),
-                DefaultButton(
-                  onPressed: isLoading ? null : () => _signInWithEmail(context),
-                  text: 'Sign in with email',
-                  color: Colors.green,
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                const Text('OR'),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                DefaultButton(
-                  onPressed:
-                      isLoading ? null : () => _signInAnonymously(context),
-                  text: 'Sign In Anonymously',
-                  color: Colors.amber,
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildHeader() {
-    if (isLoading) {
+  Widget _buildHeader(bool? isLoading) {
+    if (isLoading!) {
       return const Center(child: CircularProgressIndicator());
     } else {
       return const Text(
