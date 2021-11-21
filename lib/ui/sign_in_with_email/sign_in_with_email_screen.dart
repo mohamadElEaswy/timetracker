@@ -1,11 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:timetracker/services/auth.dart';
+// import 'package:timetracker/services/auth_provider.dart';
 import 'package:timetracker/ui/sign_in/validators.dart';
 import 'package:timetracker/ui/widgets/global_button.dart';
+import 'package:timetracker/ui/widgets/show_alert.dart';
 
 class SignInWithEmail extends StatefulWidget with EmailAndPasswordValidation {
-  SignInWithEmail({Key? key, required this.auth}) : super(key: key);
-  final AuthBase auth;
+  SignInWithEmail({Key? key}) : super(key: key);
   @override
   State<SignInWithEmail> createState() => _SignInWithEmailState();
 }
@@ -36,14 +39,15 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
       _isLoading = true;
     });
     try {
+      final auth = Provider.of<AuthBase>(context,  listen: false);
       if (_formType == EmailSignInFormType.signIn) {
-        await widget.auth.signInWithEmailAndPassword(_email, _password);
+        await auth.signInWithEmailAndPassword(_email, _password);
       } else {
-        await widget.auth.createUserWithEmailAndPassword(_email, _password);
+        await auth.createUserWithEmailAndPassword(_email, _password);
       }
       Navigator.of(context).pop();
     } catch (e) {
-      print(e.toString());
+      showAlertDialog(context, title: 'sign in failed', content: e.toString(), defaultActionString: 'OK');
     } finally {
       setState(() {
         _isLoading = false;
