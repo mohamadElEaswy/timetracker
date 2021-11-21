@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timetracker/services/auth.dart';
 // import 'package:timetracker/services/auth_provider.dart';
 import 'package:timetracker/ui/sign_in/validators.dart';
+import 'package:timetracker/ui/widgets/exceptions.dart';
 import 'package:timetracker/ui/widgets/global_button.dart';
-import 'package:timetracker/ui/widgets/show_alert.dart';
 
 class SignInWithEmail extends StatefulWidget with EmailAndPasswordValidation {
   SignInWithEmail({Key? key}) : super(key: key);
@@ -16,13 +17,23 @@ class SignInWithEmail extends StatefulWidget with EmailAndPasswordValidation {
 enum EmailSignInFormType { signIn, register }
 
 class _SignInWithEmailState extends State<SignInWithEmail> {
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
 
   void _emailEditingComplete() {
-    final newFocus = widget.emailValidator.isValid(_email) ? _passwordFocusNode: _emailFocusNode ;
+    final newFocus = widget.emailValidator.isValid(_email)
+        ? _passwordFocusNode
+        : _emailFocusNode;
     FocusScope.of(context).requestFocus(newFocus);
   }
 
@@ -39,15 +50,21 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
       _isLoading = true;
     });
     try {
-      final auth = Provider.of<AuthBase>(context,  listen: false);
+      final auth = Provider.of<AuthBase>(context, listen: false);
       if (_formType == EmailSignInFormType.signIn) {
         await auth.signInWithEmailAndPassword(_email, _password);
       } else {
         await auth.createUserWithEmailAndPassword(_email, _password);
       }
       Navigator.of(context).pop();
-    } catch (e) {
-      showAlertDialog(context, title: 'sign in failed', content: e.toString(), defaultActionString: 'OK');
+    } on FirebaseAuthException catch (e) {
+      // showAlertDialog(context, title: 'sign in failed', content: e.message!, defaultActionString: 'OK');
+
+      showExceptionDialog(
+        context,
+        title: 'sign in failed',
+        exception: e,
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -78,7 +95,8 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
         ? 'Need an account? Register'
         : 'Have an account? Sign in';
     bool submitEnabled = widget.emailValidator.isValid(_email) &&
-        widget.emailValidator.isValid(_password) && !_isLoading;
+        widget.emailValidator.isValid(_password) &&
+        !_isLoading;
     // _email.isNotEmpty && _password.isNotEmpty;
     bool emailValid = _submitted && !widget.emailValidator.isValid(_email);
     bool passwordValid =
