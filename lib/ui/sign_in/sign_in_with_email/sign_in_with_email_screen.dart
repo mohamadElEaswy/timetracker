@@ -6,12 +6,11 @@ import 'package:timetracker/services/auth.dart';
 import 'package:timetracker/ui/sign_in/sign_in_with_email/email_sign_in_bloc.dart';
 import 'package:timetracker/ui/sign_in/sign_in_with_email/sign_in_model.dart';
 // import 'package:timetracker/services/auth_provider.dart';
-import 'package:timetracker/ui/sign_in/validators.dart';
 import 'package:timetracker/ui/widgets/exceptions.dart';
 import 'package:timetracker/ui/widgets/global_button.dart';
 
-class SignInWithEmail extends StatefulWidget with EmailAndPasswordValidation {
-  SignInWithEmail({Key? key, required this.bloc}) : super(key: key);
+class SignInWithEmail extends StatefulWidget {
+  const SignInWithEmail({Key? key, required this.bloc}) : super(key: key);
   final EmailSignInBloc bloc;
 
   static Widget create(BuildContext context) {
@@ -45,7 +44,7 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
   final FocusNode _passwordFocusNode = FocusNode();
 
   void _emailEditingComplete(EmailSignInModel model) {
-    final newFocus = widget.emailValidator.isValid(model.email)
+    final newFocus = model.emailValidator.isValid(model.email)
         ? _passwordFocusNode
         : _emailFocusNode;
     FocusScope.of(context).requestFocus(newFocus);
@@ -66,35 +65,23 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
     }
   }
 
-  void _toggleFormType(EmailSignInModel model) {
-    widget.bloc.updateWith(
-      email: '',
-      password: '',
-      formType: model.formType == EmailSignInFormType.signIn
-          ? EmailSignInFormType.register
-          : EmailSignInFormType.signIn,
-      submitted: false,
-      isLoading: false,
-    );
+  void _toggleFormType() {
+    widget.bloc.toggleFormType();
     _emailController.clear();
     _passwordController.clear();
   }
 
   List<Widget> _buildChildren(EmailSignInModel? model) {
-    final String primaryText = model!.formType == EmailSignInFormType.signIn
-        ? 'Sign in'
-        : 'Create an account';
-    final String secondaryText = model.formType == EmailSignInFormType.signIn
-        ? 'Need an account? Register'
-        : 'Have an account? Sign in';
-    bool submitEnabled = widget.emailValidator.isValid(model.email) &&
-        widget.emailValidator.isValid(model.password) &&
-        !model.isLoading;
-    // _email.isNotEmpty && _password.isNotEmpty;
-    bool emailValid =
-        model.submitted && widget.emailValidator.isValid(model.email);
-    bool passwordValid =
-        model.submitted && widget.passwordValidator.isValid(model.password);
+    // final String primaryText = model!.formType == EmailSignInFormType.signIn
+    //     ? 'Sign in'
+    //     : 'Create an account';
+    // final String secondaryText = model.formType == EmailSignInFormType.signIn
+    //     ? 'Need an account? Register'
+    //     : 'Have an account? Sign in';
+    // bool submitEnabled = model.emailValidator.isValid(model.email) &&
+    //     model.emailValidator.isValid(model.password) &&
+    //     !model.isLoading;
+
     return [
       TextField(
         controller: _emailController,
@@ -104,12 +91,12 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
         decoration: InputDecoration(
           hintText: 'test@test.com',
           label: const Text('Email'),
-          errorText: emailValid ? widget.invalidEmailErrorText : null,
+          errorText: model!.emailErrorText,
           enabled: model.isLoading == false,
         ),
         focusNode: _emailFocusNode,
         onEditingComplete: () => _emailEditingComplete(model),
-        onChanged: (email) => widget.bloc.updateWith(email: email),
+        onChanged: widget.bloc.updateEmail,
       ),
       const SizedBox(height: 8),
       TextField(
@@ -117,26 +104,26 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           label: const Text('Password'),
-          errorText: passwordValid ? widget.invalidPasswordErrorText : null,
+          errorText: model.passwordErrorText,
           enabled: model.isLoading == false,
         ),
         obscureText: true,
         autocorrect: false,
         focusNode: _passwordFocusNode,
-        onEditingComplete: submitEnabled ? _submit : null,
-        onChanged: (password) => widget.bloc.updateWith(password: password),
+        onEditingComplete: model.submitEnabled ? _submit : null,
+        onChanged: widget.bloc.updatePassword,
       ),
       const SizedBox(height: 8),
       DefaultButton(
-        text: primaryText,
+        text: model.primaryText,
         color: Colors.indigo,
-        onPressed: submitEnabled ? _submit : null,
+        onPressed: model.submitEnabled ? _submit : null,
       ),
       // ElevatedButton(onPressed: () {}, child: const Text('Sign in')),
       const SizedBox(height: 8),
       TextButton(
-          onPressed: !model.isLoading ? () => _toggleFormType(model) : null,
-          child: Text(secondaryText)),
+          onPressed: !model.isLoading ? _toggleFormType : null,
+          child: Text(model.secondaryText)),
     ];
   }
 

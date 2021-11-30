@@ -126,7 +126,7 @@ class SignInScreen extends StatelessWidget {
   }
 
   void _signInWithEmail(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => SignInWithEmail.create(context)));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SignInWithEmail.create(context)));
   }
 }

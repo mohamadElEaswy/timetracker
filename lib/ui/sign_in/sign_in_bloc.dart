@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:timetracker/services/auth.dart';
 
-class SignInBloc {
+class SignInBloc{
   SignInBloc({required this.auth});
   final AuthBase auth;
   final StreamController<bool> _isLoadingController = StreamController<bool>();

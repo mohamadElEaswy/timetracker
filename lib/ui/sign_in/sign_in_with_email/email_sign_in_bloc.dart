@@ -16,6 +16,7 @@ class EmailSignInBloc {
     _modelController.close();
   }
 
+  //submit button in singing in form
   Future<void> submit() async {
     updateWith(isLoading: true, submitted: true);
     try {
@@ -30,6 +31,24 @@ class EmailSignInBloc {
       rethrow;
     }
   }
+
+
+// toggle between signing in forms
+  void toggleFormType(){
+    final formType =_model.formType == EmailSignInFormType.signIn
+        ? EmailSignInFormType.register
+        : EmailSignInFormType.signIn;
+    updateWith(
+      email: '',
+      password: '',
+      formType: formType,
+      submitted: false,
+      isLoading: false,
+    );
+  }
+
+  void updateEmail(String email) => updateWith(email: email);
+  void updatePassword(String password) => updateWith(password: password);
 
   void updateWith({
     String? email,
