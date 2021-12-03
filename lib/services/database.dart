@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:timetracker/models/job_model.dart';
 import 'package:timetracker/services/api_path.dart';
 import 'package:timetracker/services/firestore_services.dart';

@@ -8,6 +8,7 @@ import 'package:timetracker/ui/sign_in/sign_in_with_email/sign_in_model.dart';
 // import 'package:timetracker/services/auth_provider.dart';
 import 'package:timetracker/ui/widgets/exceptions.dart';
 import 'package:timetracker/ui/widgets/global_button.dart';
+import 'package:timetracker/ui/widgets/text_form_field.dart';
 
 class SignInWithEmail extends StatefulWidget {
   const SignInWithEmail({Key? key, required this.bloc}) : super(key: key);
@@ -83,36 +84,57 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
     //     !model.isLoading;
 
     return [
-      TextField(
+      // TextField(
+      //   controller: _emailController,
+      //   keyboardType: TextInputType.emailAddress,
+      //   autocorrect: false,
+      //   textInputAction: TextInputAction.next,
+      //   decoration: InputDecoration(
+      //     hintText: 'test@test.com',
+      //     label: const Text('Email'),
+      //     errorText: model!.emailErrorText,
+      //     enabled: model.isLoading == false,
+      //   ),
+      //   focusNode: _emailFocusNode,
+      //   onEditingComplete: () => _emailEditingComplete(model),
+      //   onChanged: widget.bloc.updateEmail,
+      // ),
+      const SizedBox(height: 8),
+      GlobalTextFormField(textInputType: TextInputType.emailAddress,textInputAction: TextInputAction.next, hintText: 'test@test.com',
         controller: _emailController,
-        keyboardType: TextInputType.emailAddress,
-        autocorrect: false,
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          hintText: 'test@test.com',
-          label: const Text('Email'),
-          errorText: model!.emailErrorText,
-          enabled: model.isLoading == false,
-        ),
+        text: 'Email',
+        errorText: model!.emailErrorText,
+        enabled: model.isLoading == false,
+        obscureText: false,
         focusNode: _emailFocusNode,
         onEditingComplete: () => _emailEditingComplete(model),
         onChanged: widget.bloc.updateEmail,
       ),
       const SizedBox(height: 8),
-      TextField(
+      GlobalTextFormField(textInputType: TextInputType.number,textInputAction: TextInputAction.done,
         controller: _passwordController,
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          label: const Text('Password'),
-          errorText: model.passwordErrorText,
-          enabled: model.isLoading == false,
-        ),
+        text: 'Password',
+        errorText: model.passwordErrorText,
+        enabled: model.isLoading == false,
         obscureText: true,
-        autocorrect: false,
         focusNode: _passwordFocusNode,
         onEditingComplete: model.submitEnabled ? _submit : null,
         onChanged: widget.bloc.updatePassword,
       ),
+      // TextField(
+      //   controller: _passwordController,
+      //   textInputAction: TextInputAction.done,
+      //   decoration: InputDecoration(
+      //     label: const Text('Password'),
+      //     errorText: model.passwordErrorText,
+      //     enabled: model.isLoading == false,
+      //   ),
+      //   obscureText: true,
+      //   autocorrect: false,
+      //   focusNode: _passwordFocusNode,
+      //   onEditingComplete: model.submitEnabled ? _submit : null,
+      //   onChanged: widget.bloc.updatePassword,
+      // ),
       const SizedBox(height: 8),
       DefaultButton(
         text: model.primaryText,
