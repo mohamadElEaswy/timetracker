@@ -1,10 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timetracker/models/job_model.dart';
 import 'package:timetracker/services/auth.dart';
 import 'package:timetracker/services/database.dart';
-import 'package:timetracker/ui/widgets/exceptions.dart';
+import 'package:timetracker/ui/home/new_job/new_job_screen.dart';
 import 'package:timetracker/ui/widgets/show_alert.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -32,20 +31,6 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _createJob(BuildContext context,
-      {required String name, required int ratePerHour}) async {
-    try {
-      final database = Provider.of<Database>(context, listen: false);
-      await database.createJob(
-        Job(
-          name: name,
-          ratePerHour: ratePerHour,
-        ),
-      );
-    } on FirebaseException catch (e) {
-      showExceptionDialog(context, exception: e, title: 'Operation Field');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +54,14 @@ class HomeScreen extends StatelessWidget {
       ),
       body: _buildContents(context),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _createJob(
-          context,
-          name: 'name',
-          ratePerHour: 11,
-        ),
+        onPressed: () =>
+            NewJobScreen.show(context),
+            // navigateTo(context, const NewJobScreen()),
+        //     _createJob(
+        //   context,
+        //   name: 'name',
+        //   ratePerHour: 11,
+        // ),
         child: const Icon(Icons.add),
       ),
     );
@@ -87,10 +75,28 @@ class HomeScreen extends StatelessWidget {
         if (snapshot.hasData) {
           final jobs = snapshot.data;
           final children =
-              jobs!.map((job) => Text(job!.name.toString())).toList(); return ListView(children:children,);
-        } if(snapshot.hasError) {const Center(child: Text('Some Error occurred'),);}
-        return const Center( child:  CircularProgressIndicator(),);
+              jobs!.map((job) => Text(job!.name.toString())).toList();
+          return ListView(
+            children: children,
+          );
+        }
+        if (snapshot.hasError) {
+          const Center(
+            child: Text('Some Error occurred'),
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }
+
+  navigateTo(BuildContext context, Widget newRoute) => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => newRoute,
+          fullscreenDialog: true,
+        ),
+      );
 }

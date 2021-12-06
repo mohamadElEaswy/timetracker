@@ -12,10 +12,12 @@ class FirestoreDatabase implements Database {
   FirestoreDatabase({required this.uid});
   final String uid;
   final _service = FireStoreService.instance;
+
+  String documentIDCurrentDate () => DateTime.now().toIso8601String();
 //send data to Cloud FireStore DataBase
   @override
   Future<void> createJob(Job job) async =>
-      _service.setData(path: ApiPath.job(uid, 'jobID'), data: job.toMap());
+      _service.setData(path: ApiPath.job(uid, documentIDCurrentDate()), data: job.toMap());
 
 //the coming data from Cloud FireStore DataBase
   @override

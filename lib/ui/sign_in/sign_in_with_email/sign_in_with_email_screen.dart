@@ -84,23 +84,11 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
     //     !model.isLoading;
 
     return [
-      // TextField(
-      //   controller: _emailController,
-      //   keyboardType: TextInputType.emailAddress,
-      //   autocorrect: false,
-      //   textInputAction: TextInputAction.next,
-      //   decoration: InputDecoration(
-      //     hintText: 'test@test.com',
-      //     label: const Text('Email'),
-      //     errorText: model!.emailErrorText,
-      //     enabled: model.isLoading == false,
-      //   ),
-      //   focusNode: _emailFocusNode,
-      //   onEditingComplete: () => _emailEditingComplete(model),
-      //   onChanged: widget.bloc.updateEmail,
-      // ),
       const SizedBox(height: 8),
-      GlobalTextFormField(textInputType: TextInputType.emailAddress,textInputAction: TextInputAction.next, hintText: 'test@test.com',
+      GlobalTextFormField(
+        textInputType: TextInputType.emailAddress,
+        textInputAction: TextInputAction.next,
+        hintText: 'test@test.com',
         controller: _emailController,
         text: 'Email',
         errorText: model!.emailErrorText,
@@ -111,7 +99,9 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
         onChanged: widget.bloc.updateEmail,
       ),
       const SizedBox(height: 8),
-      GlobalTextFormField(textInputType: TextInputType.number,textInputAction: TextInputAction.done,
+      GlobalTextFormField(
+        textInputType: TextInputType.number,
+        textInputAction: TextInputAction.done,
         controller: _passwordController,
         text: 'Password',
         errorText: model.passwordErrorText,
@@ -121,20 +111,6 @@ class _SignInWithEmailState extends State<SignInWithEmail> {
         onEditingComplete: model.submitEnabled ? _submit : null,
         onChanged: widget.bloc.updatePassword,
       ),
-      // TextField(
-      //   controller: _passwordController,
-      //   textInputAction: TextInputAction.done,
-      //   decoration: InputDecoration(
-      //     label: const Text('Password'),
-      //     errorText: model.passwordErrorText,
-      //     enabled: model.isLoading == false,
-      //   ),
-      //   obscureText: true,
-      //   autocorrect: false,
-      //   focusNode: _passwordFocusNode,
-      //   onEditingComplete: model.submitEnabled ? _submit : null,
-      //   onChanged: widget.bloc.updatePassword,
-      // ),
       const SizedBox(height: 8),
       DefaultButton(
         text: model.primaryText,
