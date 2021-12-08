@@ -15,14 +15,14 @@ class ListItemBuilder<T> extends StatelessWidget {
       final List<T>? items = snapshot.data;
       if (items!.isNotEmpty) {
         return _buildList(items);
+      } else if (items.isEmpty) {
+        return const EmptyContent();
       }
     } else if (snapshot.hasError) {
       return const EmptyContent(
         title: 'Something Occured',
         message: 'Error occured please try again later',
       );
-    } else {
-      return const EmptyContent();
     }
     return const Center(child: CircularProgressIndicator());
   }
