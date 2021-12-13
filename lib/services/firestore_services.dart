@@ -21,6 +21,8 @@ class FireStoreService {
   Stream<List<T>> collectionStream<T>({
     required String path,
     required T Function(Map<String, dynamic> data, String documentId) builder,
+    required Function(dynamic lhs, dynamic rhs) sort,
+    Function(dynamic query)? queryBuilder,
   }) {
     final reference = FirebaseFirestore.instance.collection(path);
     final snapshots = reference.snapshots();

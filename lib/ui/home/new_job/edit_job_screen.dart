@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:timetracker/models/job_model.dart';
 import 'package:timetracker/services/database.dart';
 import 'package:timetracker/ui/widgets/exceptions.dart';
@@ -13,11 +12,12 @@ class EditJobScreen extends StatefulWidget {
   final Job? job;
   @override
   State<EditJobScreen> createState() => _EditJobScreenState();
-  static Future<void> show(BuildContext context, {Job? job}) async {
-    final database = Provider.of<Database>(context, listen: false);
+  static Future<void> show(BuildContext context,
+      {Job? job, Database? database}) async {
+    // final database = Provider.of<Database>(context, listen: false);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => EditJobScreen(
-        database: database,
+        database: database!,
         job: job,
       ),
       fullscreenDialog: true,

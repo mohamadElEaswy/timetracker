@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:timetracker/models/job_model.dart';
 import 'package:timetracker/services/auth.dart';
 import 'package:timetracker/services/database.dart';
+import 'package:timetracker/ui/home/job_entries/job_entries_page.dart';
 import 'package:timetracker/ui/home/job_item_tile.dart';
 import 'package:timetracker/ui/home/list_items_builder.dart';
 import 'package:timetracker/ui/home/new_job/edit_job_screen.dart';
@@ -66,7 +67,10 @@ class HomeScreen extends StatelessWidget {
       ),
       body: _buildContents(context),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => EditJobScreen.show(context),
+        onPressed: () => EditJobScreen.show(
+          context,
+          database: Provider.of<Database>(context, listen: false),
+        ),
         // navigateTo(context, const NewJobScreen()),
         //     _createJob(
         //   context,
@@ -94,7 +98,7 @@ class HomeScreen extends StatelessWidget {
             direction: DismissDirection.endToStart,
             child: JobItem(
               job: job,
-              onTab: () => EditJobScreen.show(context, job: job),
+              onTab: () => JobEntriesPage.show(context, job, database),
             ),
           ),
         );
