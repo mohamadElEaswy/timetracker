@@ -31,20 +31,19 @@ class FirestoreDatabase implements Database {
       _service.deleteData(path: ApiPath.job(uid, job.id));
 //the coming data from Cloud FireStore DataBase
   @override
-  Stream<List<Job?>> jobsStream() => _service.collectionStream(
+  Stream<List<Job>> jobsStream() => _service.collectionStream(
         path: ApiPath.jobs(uid),
         builder: (data, documentId) => Job.fromMap(data, documentId),
-        sort: (lhs, rhs) {},
       );
   @override
   Future<void> setEntry(Entry entry) => _service.setData(
-        path: ApiPath.entry(uid, entry.id),
+        path: ApiPath.entry(uid, entry.id, entry.jobId),
         data: entry.toMap(),
       );
 
   @override
   Future<void> deleteEntry(Entry entry) => _service.deleteData(
-        path: ApiPath.entry(uid, entry.id),
+        path: ApiPath.entry(uid, entry.id, entry.jobId),
       );
 
   @override
@@ -55,6 +54,6 @@ class FirestoreDatabase implements Database {
             ? (query) => query.where('jobId', isEqualTo: job.id)
             : null,
         builder: (data, documentID) => Entry.fromMap(data, documentID),
-        sort: (lhs, rhs) => rhs.start.compareTo(lhs.start),
+        sort: (lhs, rhs) => rhs.start!.compareTo(lhs.start!),
       );
 }
