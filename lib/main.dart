@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider<AuthBase>(
-      create: (BuildContext context)=> Auth(),
+      create: (BuildContext context) => Auth(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -29,6 +29,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-// https://courses.codewithandrea.com/courses/1330803/lectures/30572129
