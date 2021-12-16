@@ -53,22 +53,23 @@ class JobEntriesPage extends StatelessWidget {
               elevation: 2.0,
               title: Text(jobName),
               actions: <Widget>[
-                ElevatedButton(
-                  child: const Text(
-                    'Edit',
-                    style: TextStyle(fontSize: 18.0, color: Colors.white),
-                  ),
+                IconButton(
+                  icon: const Icon(Icons.edit),
                   onPressed: () =>
                       EditJobScreen.show(context, job: job, database: database),
                 ),
+                IconButton(
+                    onPressed: () => EntryPage.show(
+                        context: context, database: database, job: _job),
+                    icon: const Icon(Icons.add))
               ],
             ),
             body: _buildContent(context, job),
-            floatingActionButton: FloatingActionButton(
-              child: const Icon(Icons.add),
-              onPressed: () => EntryPage.show(
-                  context: context, database: database, job: _job),
-            ),
+            // floatingActionButton: FloatingActionButton(
+            //   child: const Icon(Icons.add),
+            //   onPressed: () => EntryPage.show(
+            //       context: context, database: database, job: _job),
+            // ),
           );
         });
   }

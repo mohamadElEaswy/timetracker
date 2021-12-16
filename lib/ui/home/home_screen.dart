@@ -2,39 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timetracker/models/job_model.dart';
-import 'package:timetracker/services/auth.dart';
 import 'package:timetracker/services/database.dart';
 import 'package:timetracker/ui/home/job_entries/job_entries_page.dart';
 import 'package:timetracker/ui/home/job_item_tile.dart';
 import 'package:timetracker/ui/home/list_items_builder.dart';
 import 'package:timetracker/ui/home/new_job/edit_job_screen.dart';
 import 'package:timetracker/ui/widgets/exceptions.dart';
-import 'package:timetracker/ui/widgets/show_alert.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
-  Future<void> _signOut(BuildContext context) async {
-    try {
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signOut();
-    } catch (e) {
-      // print(e.toString());
-    }
-  }
-
-  Future<void> _confirmSignOut({required BuildContext context}) async {
-    final didRequestSignOut = await showAlertDialog(context,
-        title: 'Logout',
-        content: 'Are you sure that you want to logout?',
-        defaultActionString: 'ok',
-        cancelActionText: 'cancel');
-    if (didRequestSignOut == true) {
-      _signOut(context);
-      // print('ok');
-    } else {
-      // print('cancel');
-    }
-  }
 
   Future<void> _delete(BuildContext context, {required Job job}) async {
     try {
@@ -54,31 +30,16 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('home'),
         actions: [
-          TextButton(
-              onPressed: () => _confirmSignOut(context: context),
-              child: const Text(
-                'Logout',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                ),
-              )),
+          IconButton(
+            onPressed: () => EditJobScreen.show(
+              context,
+              database: Provider.of<Database>(context, listen: false),
+            ),
+            icon: const Icon(Icons.add),
+          ),
         ],
       ),
       body: _buildContents(context),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => EditJobScreen.show(
-          context,
-          database: Provider.of<Database>(context, listen: false),
-        ),
-        // navigateTo(context, const NewJobScreen()),
-        //     _createJob(
-        //   context,
-        //   name: 'name',
-        //   ratePerHour: 11,
-        // ),
-        child: const Icon(Icons.add),
-      ),
     );
   }
 

@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timetracker/models/entry.dart';
 import 'package:timetracker/models/job_model.dart';
@@ -20,8 +21,8 @@ class EntryPage extends StatefulWidget {
       Database? database,
       Job? job,
       Entry? entry}) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
+    await Navigator.of(context, rootNavigator: true).push(
+      CupertinoPageRoute(
         builder: (context) =>
             EntryPage(database: database!, job: job!, entry: entry),
         fullscreenDialog: true,
