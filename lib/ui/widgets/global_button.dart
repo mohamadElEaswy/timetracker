@@ -5,7 +5,7 @@ class DefaultButton extends StatelessWidget {
       {Key? key,
       required this.text,
       this.onPressed,
-      required this.color,
+      this.color = Colors.indigo,
       this.textColor = Colors.white})
       : super(key: key);
 
