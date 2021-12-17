@@ -1,15 +1,16 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:shop2/main.dart';
+import 'package:timetracker/models/job_model.dart';
 
 void main() {
-
+  group('from map', () {
+    test('not null data check', () {
+      final job = Job.fromMap({
+        'name': 'Blogging',
+        'ratePerHour': 10,
+      }, 'abc');
+      expect(job.name, 'Blogging');
+      expect(job.ratePerHour, 10);
+      expect(job.id, 'abc');
+    });
+  });
 }
