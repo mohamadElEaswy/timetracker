@@ -4,7 +4,7 @@ class GlobalTextFormField extends StatelessWidget {
   const GlobalTextFormField(
       {Key? key,
       required this.controller,
-      required this.text,
+      required this.lable,
       required this.errorText,
       required this.enabled,
       required this.focusNode,
@@ -20,7 +20,7 @@ class GlobalTextFormField extends StatelessWidget {
   final FocusNode focusNode;
   final TextInputAction textInputAction;
   final TextInputType textInputType;
-  final String text;
+  final String lable;
   final String? errorText;
   final String? hintText;
   final bool enabled;
@@ -33,7 +33,7 @@ class GlobalTextFormField extends StatelessWidget {
       controller: controller,
       textInputAction: textInputAction,keyboardType: textInputType,
       decoration: InputDecoration(
-        label: Text(text),
+        label: Text(lable),
         errorText: errorText,
         enabled: enabled,hintText: hintText,
       ),
