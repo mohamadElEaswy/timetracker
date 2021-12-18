@@ -7,6 +7,7 @@ import 'package:timetracker/ui/landing_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Firebase.app();
   runApp(const MyApp());
 }
 
