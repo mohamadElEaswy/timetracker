@@ -162,8 +162,8 @@ class _EntryPageState extends State<EntryPage> {
       maxLength: 50,
       controller: TextEditingController(text: _comment),
       decoration: const InputDecoration(
-        // labelText: 'Comment',
-        label: Text('Comment'),
+        labelText: 'Comment',
+        // label: Text('Comment'),
         labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
       ),
       style: const TextStyle(fontSize: 20.0, color: Colors.black),

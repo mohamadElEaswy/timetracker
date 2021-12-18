@@ -33,7 +33,8 @@ class GlobalTextFormField extends StatelessWidget {
       controller: controller,
       textInputAction: textInputAction,keyboardType: textInputType,
       decoration: InputDecoration(
-        label: Text(lable),
+        // label: Text(lable),
+        labelText: lable,
         errorText: errorText,
         enabled: enabled,hintText: hintText,
       ),

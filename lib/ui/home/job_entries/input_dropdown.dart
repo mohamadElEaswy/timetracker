@@ -20,8 +20,8 @@ class InputDropdown extends StatelessWidget {
       onTap: onPressed,
       child: InputDecorator(
         decoration: InputDecoration(
-          // labelText: labelText,
-          label: Text(labelText!)
+          labelText: labelText,
+          // label: Text(labelText!)
         ),
         baseStyle: valueStyle,
         child: Row(
