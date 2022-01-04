@@ -7,6 +7,7 @@ import 'package:timetracker/ui/landing_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Firebase.app();
   runApp(const MyApp());
 }
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider<AuthBase>(
-      create: (BuildContext context)=> Auth(),
+      create: (BuildContext context) => Auth(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -29,6 +30,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// trying
-// https://courses.codewithandrea.com/courses/1330803/lectures/30572129
+/*
+  keytool -genkey -v -keystore C:\Users\eleas\key.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+ */

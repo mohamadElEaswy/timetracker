@@ -15,7 +15,7 @@ Future<void> showExceptionDialog(
   );
 }
 String? _message(Exception exception){
-  if(exception is FirebaseAuthException){return exception.message;}
+  if(exception is FirebaseAuthException){return exception.message.toString();}
   else {
     return exception.toString();
   }

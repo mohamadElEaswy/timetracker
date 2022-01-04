@@ -8,15 +8,20 @@ import 'package:timetracker/ui/widgets/exceptions.dart';
 import 'package:timetracker/ui/widgets/global_button.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({Key? key, required this.bloc}) : super(key: key);
+  const SignInScreen({Key? key, required this.bloc, required this.isLoading}) : super(key: key);
   final SignInBloc bloc;
+  final bool isLoading;
   static Widget create(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    return Provider<SignInBloc>(
-      create: (_) => SignInBloc(auth: auth),
-      dispose: (_, bloc) => bloc.dispose(),
-      child: Consumer<SignInBloc>(
-        builder: (_, bloc, __) => SignInScreen(bloc: bloc),
+    return ChangeNotifierProvider<ValueNotifier<bool>>(
+      create: (_) => ValueNotifier<bool>(false),
+      child: Consumer<ValueNotifier<bool>>(
+        builder: (_, isLoading, __) => Provider<SignInBloc>(
+          create: (_) => SignInBloc(auth: auth, isLoading: isLoading),
+          child: Consumer<SignInBloc>(
+            builder: (_, bloc, __) => SignInScreen(bloc: bloc, isLoading: isLoading.value,),
+          ),
+        ),
       ),
     );
   }
@@ -53,66 +58,58 @@ class SignInScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Time Trucker'),
       ),
-      body: StreamBuilder<bool>(
-        stream: bloc.isLoadingStream,
-        initialData: false,
-        builder: (context, snapshot) {
-          bool isLoading = snapshot.data!;
-          return Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildHeader(isLoading),
-                    const SizedBox(height: 20.0),
-                    SizedBox(
-                      height: 50.0,
-                      child: DefaultButton(
-                        onPressed:
-                            isLoading ? null : () => _signInWithGoogle(context),
-                        text: 'Sign In with Google',
-                        color: Colors.white,
-                        textColor: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    // DefaultButton(
-                    //   onPressed: _signInWithFacebook,
-                    //   text: 'Sing In with FaceBook',
-                    //   color: Colors.blue,
-                    // ),const SizedBox(height: 20.0,),
-                    DefaultButton(
-                      onPressed:
-                          isLoading ? null : () => _signInWithEmail(context),
-                      text: 'Sign in with email',
-                      color: Colors.green,
-                    ),
-                    const SizedBox(height: 20.0),
-                    const Text('OR'),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    DefaultButton(
-                      onPressed:
-                          isLoading ? null : () => _signInAnonymously(context),
-                      text: 'Sign In Anonymously',
-                      color: Colors.amber,
-                    ),
-                  ],
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 20.0),
+                SizedBox(
+                  height: 50.0,
+                  child: DefaultButton(
+                    onPressed:
+                        isLoading ? null : () => _signInWithGoogle(context),
+                    text: 'Sign In with Google',
+                    color: Colors.white,
+                    textColor: Colors.black,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 20.0),
+                // DefaultButton(
+                //   onPressed: _signInWithFacebook,
+                //   text: 'Sing In with FaceBook',
+                //   color: Colors.blue,
+                // ),const SizedBox(height: 20.0,),
+                DefaultButton(
+                  onPressed: isLoading ? null : () => _signInWithEmail(context),
+                  text: 'Sign in with email',
+                  color: Colors.green,
+                ),
+                const SizedBox(height: 20.0),
+                const Text('OR'),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                DefaultButton(
+                  onPressed:
+                      isLoading ? null : () => _signInAnonymously(context),
+                  text: 'Sign In Anonymously',
+                  color: Colors.amber,
+                ),
+              ],
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildHeader(bool? isLoading) {
-    if (isLoading!) {
+  Widget _buildHeader() {
+    if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     } else {
       return const Text(
@@ -126,7 +123,7 @@ class SignInScreen extends StatelessWidget {
   }
 
   void _signInWithEmail(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => SignInWithEmail()));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SignInWithEmail.create(context)));
   }
 }

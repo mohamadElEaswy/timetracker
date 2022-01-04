@@ -1,15 +1,15 @@
-abstract class StringValidator{
+abstract class StringValidator {
   bool isValid(String value);
 }
 
-class NotEmptyStringValidator implements StringValidator{
+class NotEmptyStringValidator implements StringValidator {
   @override
   bool isValid(String value) {
     return value.isNotEmpty;
   }
 }
 
-class EmailAndPasswordValidation{
+class EmailAndPasswordValidation {
   final NotEmptyStringValidator emailValidator = NotEmptyStringValidator();
   final NotEmptyStringValidator passwordValidator = NotEmptyStringValidator();
   final String invalidEmailErrorText = 'Email can\'t be empty';
